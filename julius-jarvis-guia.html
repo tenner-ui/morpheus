@@ -1,0 +1,139 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Julius → J.A.R.V.I.S.</title>
+<style>
+@page{size:A4;margin:20mm 16mm}
+*{box-sizing:border-box}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1f2b;margin:0;font-size:11.2pt;line-height:1.55}
+h1,h2,h3{font-family:Georgia,'Times New Roman',serif;color:#0D1F3F}
+.cover{background:linear-gradient(160deg,#0D1F3F,#080B12);color:#F4F2EA;padding:60px 46px;border-radius:0;margin:-2px -2px 26px;page-break-after:always;min-height:245mm;display:flex;flex-direction:column}
+.cover .mono{width:64px;height:64px;border-radius:16px;background:radial-gradient(circle at 35% 30%,#E6CD8C,#C8A24A);display:flex;align-items:center;justify-content:center;color:#2a2008;font-weight:800;font-family:Georgia;font-size:26px}
+.cover .eye{letter-spacing:.38em;text-transform:uppercase;color:#C8A24A;font-size:11px;margin-top:40px}
+.cover h1{color:#F4F2EA;font-size:44px;line-height:1.08;margin:14px 0 8px}
+.cover h1 em{color:#E6CD8C;font-style:italic}
+.cover .sub{color:rgba(244,242,234,.8);font-size:15px;max-width:78%}
+.cover .foot{margin-top:auto;color:rgba(244,242,234,.6);font-size:12px;border-top:1px solid rgba(200,162,74,.35);padding-top:14px}
+.cover .foot b{color:#E6CD8C}
+h2{font-size:20px;border-bottom:2px solid #C8A24A;padding-bottom:6px;margin:26px 0 12px}
+h3{font-size:14.5px;color:#2B5AA0;margin:16px 0 6px}
+p{margin:0 0 9px}
+.lead{font-size:12.5px;color:#3a4250}
+ul,ol{margin:0 0 10px;padding-left:20px}
+li{margin:4px 0}
+.eyebrow{letter-spacing:.28em;text-transform:uppercase;color:#C8A24A;font-size:10px;font-weight:700}
+.box{border:1px solid #d9c58f;background:#faf6ec;border-radius:10px;padding:12px 15px;margin:12px 0}
+.box.warn{border-color:#e0b48a;background:#fdf3ea}
+.box.sec{border-left:4px solid #C8A24A}
+.box h4{margin:0 0 6px;font-family:Georgia;color:#0D1F3F;font-size:13px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:10.4pt}
+th,td{border:1px solid #d8dee8;padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#0D1F3F;color:#F4F2EA;font-family:Georgia;font-weight:600}
+tr:nth-child(even) td{background:#f5f7fa}
+.layer{display:flex;gap:12px;align-items:flex-start;border:1px solid #e3e7ee;border-radius:10px;padding:11px 14px;margin:8px 0}
+.layer .n{flex:0 0 34px;height:34px;border-radius:9px;background:#C8A24A;color:#2a2008;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:Georgia}
+.layer b{color:#0D1F3F}
+.small{font-size:10pt;color:#5a6474}
+code{background:#eef1f6;border:1px solid #dfe4ec;border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.6pt}
+.phase{border-left:3px solid #2B5AA0;padding:2px 0 2px 14px;margin:12px 0}
+.phase b{color:#0D1F3F}
+.pgbreak{page-break-before:always}
+.footer-note{margin-top:22px;border-top:1px solid #d8dee8;padding-top:10px;color:#7a8494;font-size:9.5pt}
+</style></head>
+<body>
+<div class="cover">
+  <div class="mono">TN</div>
+  <div class="eye">Instituto Vitality · Ecossistema Morpheus</div>
+  <h1>Julius → <em>J.A.R.V.I.S.</em></h1>
+  <div class="sub">Manual de integração: como levar o Julius para todo lugar, conectá-lo à internet e transformá-lo no cérebro da automação dos seus equipamentos.</div>
+  <div class="foot">Guia técnico para <b>Dr. Tenner Nunes</b> · CRM/RR 2920<br>Versão 1.0 — visão e roteiro de implementação. Documento de trabalho: "crie e vamos aprimorando".</div>
+</div>
+
+<div class="eyebrow">Parte 1 · A visão</div>
+<h2>O cérebro é o Claude. O Julius é a sua voz.</h2>
+<p class="lead">No ecossistema Morpheus, o hub central é o cérebro e o <b>Julius</b> já vive nele — ligado à Central de APIs &amp; Tokens e ao gateway de IA (ia-vivi). O próximo salto é dar a esse cérebro um <b>corpo</b> (um servidor sempre ligado), <b>sentidos</b> (voz), <b>mãos</b> (ferramentas) e <b>alcance</b> (seus aparelhos e a internet). É isso que separa um assistente de chat de um J.A.R.V.I.S.: não é um modelo maior — é um modelo com <b>corpo, memória e ferramentas</b>.</p>
+<div class="box sec"><h4>Princípio inegociável</h4><p style="margin:0">Nenhuma chave/segredo fica exposta. O Julius pensa com o Claude através de uma função no servidor (gateway ia-vivi); as credenciais dos seus aparelhos ficam na sua casa/servidor, nunca num app público. Local-first sempre que possível.</p></div>
+
+<div class="eyebrow">Parte 2 · Arquitetura em cinco camadas</div>
+<h2>Como o Julius vira um sistema</h2>
+<div class="layer"><div class="n">1</div><div><b>Cérebro</b> — o raciocínio. Claude (via gateway ia-vivi que você já tem). É quem decide, redige e planeja. Trocável sem quebrar o resto.</div></div>
+<div class="layer"><div class="n">2</div><div><b>Corpo</b> — um processo sempre ligado que hospeda o Julius: um mini-PC em casa (ex.: Raspberry Pi / Mini PC) ou um VPS. É o "sempre online" que recebe sua voz e executa ações.</div></div>
+<div class="layer"><div class="n">3</div><div><b>Sentidos</b> — voz: <b>wake word</b> ("Julius"), <b>STT</b> (fala→texto, ex.: Whisper) e <b>TTS</b> (texto→fala). É o que permite falar naturalmente em vez de digitar.</div></div>
+<div class="layer"><div class="n">4</div><div><b>Mãos</b> — <b>ferramentas</b> que o Julius pode acionar (function calling / MCP): buscar na web, ler sua agenda, enviar mensagem, e — o ponto central — <b>controlar aparelhos</b>.</div></div>
+<div class="layer"><div class="n">5</div><div><b>Casa</b> — a ponte universal para os eletrônicos: o <b>Home Assistant</b>, que fala com lâmpadas, tomadas, TVs, ar-condicionado, fechaduras, sensores via <b>Matter/Thread</b>, Zigbee e Wi-Fi.</div></div>
+
+<div class="box"><h4>Em uma frase</h4><p style="margin:0">Você fala → o corpo ouve (STT) → o cérebro (Claude) entende e escolhe uma ferramenta → a mão aciona o Home Assistant → o aparelho obedece → o Julius responde por voz (TTS).</p></div>
+
+<div class="pgbreak"></div>
+<div class="eyebrow">Parte 3 · Levar o Julius para todo lugar</div>
+<h2>Onipresença: o mesmo Julius no consultório, no carro e em casa</h2>
+<p>O segredo da onipresença é separar o <b>corpo</b> (que fica sempre ligado num lugar) do <b>ponto de acesso</b> (que vai com você). Você fala com o mesmo Julius de qualquer lugar porque todos os pontos conversam com o mesmo corpo.</p>
+<table>
+<tr><th>Onde</th><th>Como acessar o Julius</th><th>Observação</th></tr>
+<tr><td>Celular (todo lugar)</td><td>App/atalho PWA que abre o Julius; botão de voz</td><td>Instale o hub como PWA (adicionar à tela inicial). Voz via microfone do celular.</td></tr>
+<tr><td>Casa / consultório</td><td>Alto-falante inteligente ou mini-PC com microfone</td><td>Wake word "Julius" sempre escutando localmente.</td></tr>
+<tr><td>Carro</td><td>Celular pareado (Bluetooth/CarPlay/Android Auto)</td><td>Mesmo PWA; comando por voz.</td></tr>
+<tr><td>Computador</td><td>Aba do navegador ou app desktop</td><td>Já funciona hoje no hub.</td></tr>
+</table>
+<h3>Acesso remoto seguro (o corpo em casa, você na rua)</h3>
+<p>Para o celular na rua alcançar o corpo do Julius em casa <b>sem abrir portas para a internet</b>, use uma rede privada: <b>Tailscale</b> ou <b>WireGuard</b> (VPN) — o celular e o servidor ficam na mesma rede virtual criptografada. Alternativa gerenciada: o <b>Nabu Casa / Home Assistant Cloud</b> (acesso remoto oficial, pago, sem configurar rede). Evite expor o servidor direto na internet.</p>
+
+<div class="eyebrow">Parte 4 · Conectar à internet e dar ferramentas</div>
+<h2>As mãos do Julius: MCP e function calling</h2>
+<p>O Claude aciona ferramentas por <b>function calling</b>. O padrão aberto para plugar ferramentas é o <b>MCP (Model Context Protocol)</b> — cada capacidade (busca web, calendário, WhatsApp, Home Assistant) vira um "servidor MCP" que o Julius pode chamar. Assim você adiciona poderes sem reescrever o cérebro.</p>
+<table>
+<tr><th>Capacidade</th><th>Como plugar</th><th>Exemplo de uso</th></tr>
+<tr><td>Buscar na internet</td><td>Ferramenta de busca web (já suportada no gateway via <code>web:true</code>)</td><td>"Julius, qual a última diretriz sobre X?"</td></tr>
+<tr><td>Agenda / e-mail</td><td>MCP de Google Calendar / Gmail</td><td>"Remarque meu paciente de amanhã."</td></tr>
+<tr><td>Mensagens</td><td>MCP/Evolution API (WhatsApp)</td><td>"Avise a recepção que vou atrasar."</td></tr>
+<tr><td>Casa / aparelhos</td><td>MCP Server do Home Assistant</td><td>"Diminua as luzes e ligue o ar."</td></tr>
+<tr><td>Prontuário / Morpheus</td><td>Gateway ia-vivi + módulos</td><td>"Monte o protocolo desse caso."</td></tr>
+</table>
+<div class="box sec"><h4>Você já tem meio caminho andado</h4><p style="margin:0">A <b>Central de APIs &amp; Tokens</b> do hub e o <b>gateway ia-vivi</b> são exatamente a fundação de "mãos com segurança": um lugar central para credenciais e uma função no servidor que fala com o Claude sem expor a chave. Os servidores MCP se conectam a essa mesma espinha.</p></div>
+
+<div class="pgbreak"></div>
+<div class="eyebrow">Parte 5 · O cérebro da automação dos seus equipamentos</div>
+<h2>Home Assistant: a ponte universal</h2>
+<p>Em vez de o Julius falar com cada marca de aparelho (cada uma com seu app e API), ele fala com <b>um</b> sistema que já fala com todos: o <b>Home Assistant</b> (open-source, roda no seu mini-PC). Ele integra milhares de dispositivos e hoje tem um <b>servidor MCP oficial</b> — feito para um assistente como o Julius controlar a casa por linguagem natural.</p>
+<h3>O padrão que unifica os aparelhos: Matter / Thread</h3>
+<p><b>Matter</b> é o padrão universal de casa inteligente (Apple, Google, Amazon, Samsung juntos); <b>Thread</b> é a malha sem-fio de baixo consumo. Comprar aparelhos <b>"Matter"</b> garante que entram no Home Assistant sem depender da nuvem do fabricante. Para aparelhos mais antigos, <b>Zigbee/Z-Wave</b> (com um adaptador USB) ou tomadas inteligentes Wi-Fi resolvem.</p>
+<table>
+<tr><th>O que automatizar</th><th>Dispositivo</th><th>Comando ao Julius</th></tr>
+<tr><td>Iluminação</td><td>Lâmpadas/fitas Matter ou Zigbee</td><td>"Modo consulta: luz quente a 40%."</td></tr>
+<tr><td>Climatização</td><td>Ar-condicionado (Matter/IR) </td><td>"Deixe a sala em 23 graus."</td></tr>
+<tr><td>Tomadas / equipamentos</td><td>Smart plugs Wi-Fi/Matter</td><td>"Ligue o equipamento X."</td></tr>
+<tr><td>Áudio / TV</td><td>Alto-falantes, TV (Cast/Matter)</td><td>"Toque foco no consultório."</td></tr>
+<tr><td>Acesso / segurança</td><td>Fechaduras, sensores, câmeras</td><td>"Tranque tudo e apague as luzes."</td></tr>
+</table>
+<div class="box sec"><h4>Como o Julius aciona (fluxo real)</h4><p style="margin:0">Julius (Claude) → chama o <b>MCP Server do Home Assistant</b> → o Home Assistant executa o serviço no aparelho (via Matter/Thread/Zigbee) → confirma de volta. Você só falou uma frase.</p></div>
+
+<div class="eyebrow">Parte 6 · Roteiro de implementação (por fases)</div>
+<h2>Do que existe hoje até o J.A.R.V.I.S.</h2>
+<div class="phase"><b>Fase 0 — já feito.</b> Julius no hub, ligado ao gateway ia-vivi e à Central de Tokens (chat por texto). Publicar a função <code>ia-vivi</code> e cadastrar a chave dá voz ao cérebro.</div>
+<div class="phase"><b>Fase 1 — corpo sempre ligado.</b> Um mini-PC em casa (ou VPS). Instale o Julius como serviço; acesso remoto por Tailscale/WireGuard. Objetivo: falar com o mesmo Julius de qualquer lugar.</div>
+<div class="phase"><b>Fase 2 — voz.</b> Adicione wake word ("Julius") + STT (Whisper) + TTS. Objetivo: conversar sem digitar.</div>
+<div class="phase"><b>Fase 3 — mãos (MCP).</b> Plugue os primeiros servidores MCP: busca web, agenda, mensagens. Objetivo: Julius age, não só responde.</div>
+<div class="phase"><b>Fase 4 — casa.</b> Instale o Home Assistant, comece com 2–3 aparelhos Matter, ligue o MCP Server do Home Assistant ao Julius. Objetivo: controle por voz dos equipamentos.</div>
+<div class="phase"><b>Fase 5 — proatividade e memória.</b> Julius com memória de longo prazo (preferências, rotinas) e automações que ele dispara sozinho (rotina "chegar ao consultório"). Objetivo: um assistente que antecipa.</div>
+
+<div class="pgbreak"></div>
+<div class="eyebrow">Parte 7 · Segurança, privacidade e limites</div>
+<h2>O que proteger — sempre</h2>
+<ul>
+<li><b>Credenciais no servidor, nunca no app.</b> Chave da IA como <i>secret</i> no gateway; tokens dos aparelhos dentro do Home Assistant/servidor.</li>
+<li><b>Rede privada, não portas abertas.</b> Acesso remoto por VPN (Tailscale/WireGuard) ou Nabu Casa. Nunca exponha o Home Assistant direto na internet.</li>
+<li><b>Local-first.</b> STT/TTS e automações podem rodar localmente; só o raciocínio vai à nuvem — e, quando envolver dado de paciente, <b>anonimizado antes</b> (como o Núcleo Clínico já faz).</li>
+<li><b>Confirmação em ações críticas.</b> Trancar/destrancar, equipamentos sensíveis: Julius confirma antes de executar.</li>
+<li><b>LGPD.</b> Automação da casa/consultório é pessoal; dados clínicos seguem as regras do ecossistema (anonimização, RLS, sem segredo no front).</li>
+</ul>
+<div class="box warn"><h4>Um limite honesto</h4><p style="margin:0">Este cérebro não é infalível: para saúde e segurança, o Julius é <b>copiloto</b>, não decisor final. Ações irreversíveis pedem sua confirmação. A conduta clínica permanece sua, sob o CFM.</p></div>
+
+<h2>Lista de compras mínima (para começar a Fase 1–4)</h2>
+<table>
+<tr><th>Item</th><th>Para quê</th></tr>
+<tr><td>Mini-PC (ou Raspberry Pi 5) </td><td>Corpo do Julius + Home Assistant</td></tr>
+<tr><td>Conta Tailscale (grátis) </td><td>Acesso remoto seguro</td></tr>
+<tr><td>Microfone/alto-falante</td><td>Voz (wake word, STT/TTS)</td></tr>
+<tr><td>2–3 dispositivos Matter (lâmpada, tomada)</td><td>Primeiros aparelhos controláveis</td></tr>
+<tr><td>Adaptador Zigbee USB (opcional)</td><td>Aparelhos sem Matter</td></tr>
+</table>
+
+<div class="footer-note">Instituto Vitality · Ecossistema Morpheus — Julius → J.A.R.V.I.S. v1.0. Guia de visão e roteiro; nomes de produtos citados são referências de mercado, não recomendações comerciais. Documento vivo — evolui conforme construímos.</div>
+</body></html>

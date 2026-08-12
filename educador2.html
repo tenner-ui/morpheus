@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#080B12"/>
+<title>Educador · ENDO7 — Ecossistema Dr. Tenner Nunes</title>
+<meta name="description" content="Plataforma de ensino do ecossistema Morpheus — curso completo ENDO7, preparatório para o Título de Especialista SBEM."/>
+<!-- MORPHEUS · MÓDULO EDUCADOR v2 — LMS completo do curso ENDO7.
+     Conteúdo clínico REAL por aula, anotações do aluno, 198 flashcards,
+     12 tabelas de alto rendimento, mentorias, TCC, simulado e certificado.
+     Design system Azul & Dourado. Acento: Azul Realce. Front puro. -->
+<style>
+:root{
+  --preto:#080B12;--azul-marinho:#0D1F3F;--azul-realce:#2B5AA0;
+  --dourado:#C8A24A;--dourado-claro:#E6CD8C;--off-white:#F4F2EA;
+  --bg-0:#060910;--bg-1:#0A1526;--bg-2:#0D1F3F;
+  --linha:rgba(200,162,74,.18);--linha-forte:rgba(200,162,74,.34);
+  --vidro-forte:rgba(10,21,38,.85);
+  --texto:#F4F2EA;--texto-suave:rgba(244,242,234,.62);--texto-fraco:rgba(244,242,234,.40);
+  --ok:#5FBF8F;--err:#D98A7A;
+  --acc:#2B5AA0;--acc-2:#4E7BC0;--acc-soft:rgba(43,90,160,.16);--acc-line:rgba(43,90,160,.5);--acc-glow:rgba(43,90,160,.28);
+  --serif:Georgia,'Times New Roman',Times,serif;--sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:32px;
+  --sombra:0 24px 60px -22px rgba(0,0,0,.75);--ease:cubic-bezier(.22,.61,.36,1);--max:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--preto);color:var(--texto);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.no-scroll{overflow:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,.serif{font-family:var(--serif);font-weight:400;letter-spacing:.2px}
+::selection{background:var(--dourado);color:var(--preto)}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+.eyebrow{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--dourado);font-weight:600}
+.muted{color:var(--texto-suave)}.gold{color:var(--dourado)}
+#bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(1100px 640px at 82% -10%,rgba(43,90,160,.34),transparent 60%),radial-gradient(820px 520px at 6% 108%,rgba(200,162,74,.10),transparent 55%),linear-gradient(180deg,rgba(6,9,16,.45),rgba(6,9,16,.78) 55%,var(--preto))}
+header.nav{position:fixed;top:0;left:0;right:0;z-index:60;transition:.4s;border-bottom:1px solid transparent}
+header.nav.solid{background:rgba(6,9,16,.74);backdrop-filter:blur(14px);border-bottom:1px solid var(--linha)}
+.nav-in{max-width:var(--max);margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px}
+.back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--texto-suave);padding:8px 12px;border-radius:999px;border:1px solid var(--linha);transition:.25s}
+.back:hover{color:var(--off-white);border-color:var(--linha-forte);background:rgba(200,162,74,.07)}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer}
+.brand img{width:30px;height:auto;filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
+.brand .bt{display:flex;flex-direction:column;line-height:1.05}
+.brand .bt b{font-family:var(--serif);font-size:15px}
+.brand .bt span{font-size:8.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--dourado)}
+.nav-sp{margin-left:auto;display:flex;align-items:center;gap:8px}
+.progress-pill{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--texto-suave);border:1px solid var(--linha);border-radius:999px;padding:7px 14px}
+.progress-pill b{color:var(--dourado);font-family:var(--serif)}
+.mini-bar{width:64px;height:5px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}
+.mini-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--dourado));width:0;transition:width .6s var(--ease)}
+.icon-btn{width:38px;height:38px;border-radius:999px;border:1px solid var(--linha);background:transparent;color:var(--off-white);cursor:pointer;display:grid;place-items:center;transition:.25s}
+.icon-btn:hover{border-color:var(--linha-forte);background:rgba(200,162,74,.08)}.icon-btn svg{width:17px;height:17px}
+main{position:relative;z-index:2}
+.hero{min-height:82svh;display:flex;align-items:center;padding:120px 0 50px}
+.hero .eyebrow{margin-bottom:16px}
+.hero h1{font-size:clamp(34px,6vw,66px);line-height:1.03;letter-spacing:-.5px;margin-bottom:20px;max-width:15ch}
+.hero h1 em{font-style:italic;color:var(--dourado)}
+.hero p.lead{font-size:clamp(15px,2vw,19px);max-width:620px;color:var(--texto-suave)}
+.hero .cta{display:flex;flex-wrap:wrap;gap:13px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 24px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:.28s var(--ease);font-family:var(--sans)}
+.btn-gold{background:linear-gradient(180deg,var(--dourado-claro),var(--dourado));color:#2a2008;box-shadow:0 14px 34px -14px rgba(200,162,74,.6)}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-blue{background:linear-gradient(180deg,var(--acc-2),var(--acc));color:#eaf1fb}
+.btn-blue:hover{transform:translateY(-2px)}
+.btn-ghost{border-color:var(--linha-forte);color:var(--off-white);background:rgba(13,31,63,.4)}
+.btn-ghost:hover{background:rgba(43,90,160,.2);transform:translateY(-2px)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.hero-stats{display:flex;gap:26px;margin-top:46px;flex-wrap:wrap}
+.hero-stats .s b{font-family:var(--serif);font-size:25px;color:var(--dourado);display:block}
+.hero-stats .s span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-fraco)}
+section.band{padding:80px 0;position:relative;scroll-margin-top:78px}
+.sec-head{max-width:660px;margin-bottom:38px}
+.sec-head h2{font-size:clamp(26px,4vw,42px);line-height:1.08;margin:12px 0 14px}
+.sec-head p{color:var(--texto-suave);font-size:16px}
+.divider{height:1px;background:linear-gradient(90deg,var(--linha),transparent)}
+.student{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;border:1px solid var(--linha);border-radius:var(--r-xl);padding:30px;background:linear-gradient(160deg,var(--bg-1),var(--bg-0));position:relative;overflow:hidden}
+.student::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 200px at 90% -20%,var(--acc-glow),transparent 70%)}
+.ring{position:relative;width:130px;height:130px;flex:0 0 auto}.ring svg{transform:rotate(-90deg)}
+.ring .val{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .val b{font-family:var(--serif);font-size:30px;color:var(--dourado);line-height:1}
+.ring .val span{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-fraco)}
+.student-info{position:relative}.student-info h3{font-size:22px;margin-bottom:6px}
+.student-info p{color:var(--texto-suave);font-size:14.5px;max-width:56ch}
+.chips-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:center}
+.stat-chip{border:1px solid var(--linha);border-radius:12px;padding:10px 14px;background:rgba(13,31,63,.4)}
+.stat-chip b{font-family:var(--serif);font-size:19px;color:var(--dourado);display:block;line-height:1.1}
+.stat-chip span{font-size:11px;color:var(--texto-fraco)}
+.trilhas{display:flex;flex-direction:column;gap:14px}
+.trilha{border:1px solid var(--linha);border-radius:var(--r-lg);background:linear-gradient(180deg,var(--bg-1),var(--bg-0));overflow:hidden;transition:.3s}
+.trilha:hover{border-color:var(--linha-forte)}
+.trilha-h{display:flex;align-items:center;gap:18px;padding:20px 24px;cursor:pointer}
+.trilha-num{flex:0 0 auto;width:54px;height:54px;border-radius:14px;display:grid;place-items:center;background:var(--acc-soft);border:1px solid var(--acc-line);font-family:var(--serif);color:var(--acc-2);text-align:center;line-height:1.05}
+.trilha-num small{display:block;font-size:8px;letter-spacing:.15em;color:var(--texto-fraco);text-transform:uppercase}
+.trilha-num b{font-size:22px}
+.trilha-main{flex:1;min-width:0}
+.trilha-main .tt{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dourado)}
+.trilha-main h3{font-size:20px;margin:2px 0 3px}.trilha-main p{font-size:13px;color:var(--texto-suave)}
+.trilha-side{flex:0 0 auto;display:flex;align-items:center;gap:16px}
+.tprog{text-align:right}.tprog b{font-family:var(--serif);font-size:16px;color:var(--dourado)}
+.tprog span{font-size:11px;color:var(--texto-fraco);display:block}
+.tbar{width:90px;height:5px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:5px}
+.tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--dourado));width:0;transition:width .5s var(--ease)}
+.chev{color:var(--texto-fraco);transition:.3s}.trilha.open .chev{transform:rotate(180deg)}
+.aulas{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}.trilha.open .aulas{max-height:2600px}
+.aulas-in{padding:2px 24px 20px}
+.aula{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:12px;cursor:pointer;transition:.2s;border:1px solid transparent}
+.aula:hover{background:rgba(200,162,74,.06);border-color:var(--linha)}
+.aula .check{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--linha-forte);display:grid;place-items:center;color:transparent;transition:.25s}
+.aula.done .check{background:var(--acc);border-color:var(--acc);color:#fff}.aula .check svg{width:14px;height:14px}
+.aula .an{flex:1;min-width:0}.aula .an b{font-size:14.5px;font-weight:500;display:block}
+.aula.done .an b{color:var(--texto-suave)}.aula .an span{font-size:12px;color:var(--texto-fraco)}
+.aula .nt{flex:0 0 auto;color:var(--dourado);opacity:.7}.aula .nt svg{width:15px;height:15px}
+.aula .play{flex:0 0 auto;color:var(--acc-2);opacity:0;transition:.2s}.aula:hover .play{opacity:1}
+.extras{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.extra{border:1px solid var(--linha);border-radius:var(--r-lg);padding:24px 22px;background:linear-gradient(180deg,var(--bg-1),var(--bg-0));cursor:pointer;transition:.35s var(--ease);position:relative;overflow:hidden}
+.extra:hover{transform:translateY(-5px);border-color:var(--linha-forte);box-shadow:var(--sombra)}
+.extra .ei{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;margin-bottom:16px;background:var(--acc-soft);border:1px solid var(--acc-line);color:var(--acc-2)}
+.extra .ei svg{width:25px;height:25px}
+.extra h4{font-family:var(--serif);font-size:18px;margin-bottom:6px}.extra p{font-size:13px;color:var(--texto-suave)}
+.extra .badge{position:absolute;top:16px;right:16px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dourado);border:1px solid var(--linha);border-radius:999px;padding:3px 9px}
+.conecta{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.conecta a{display:flex;gap:14px;align-items:center;border:1px solid var(--linha);border-radius:var(--r-md);padding:18px 20px;transition:.3s;cursor:pointer;background:rgba(13,31,63,.35)}
+.conecta a:hover{border-color:var(--linha-forte);transform:translateY(-3px)}
+.conecta .ci{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto}.conecta .ci svg{width:22px;height:22px}
+.conecta b{font-size:15px}.conecta p{font-size:12.5px;color:var(--texto-suave)}
+.overlay{position:fixed;inset:0;z-index:100;display:none;align-items:flex-start;justify-content:center;padding:34px 18px;background:rgba(4,7,13,.74);backdrop-filter:blur(8px);overflow-y:auto}
+.overlay.open{display:flex}
+.sheet{width:100%;max-width:760px;background:linear-gradient(180deg,var(--bg-2),var(--bg-0));border:1px solid var(--linha-forte);border-radius:var(--r-xl);box-shadow:var(--sombra);overflow:hidden;animation:pop .5s var(--ease)}
+.sheet.wide{max-width:900px}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.sheet-close{position:absolute;top:18px;right:18px;z-index:3}
+.lesson-top{position:relative;padding:32px 34px 22px;background:radial-gradient(560px 200px at 15% -30%,var(--acc-glow),transparent 70%)}
+.lesson-top .tt{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dourado)}
+.lesson-top h3{font-size:26px;margin:6px 0 8px}
+.video{margin:0 34px;aspect-ratio:16/7;border-radius:16px;border:1px solid var(--linha);background:radial-gradient(400px 200px at 50% 40%,rgba(43,90,160,.25),var(--bg-0));display:grid;place-items:center;position:relative;overflow:hidden}
+.video .pl{width:58px;height:58px;border-radius:50%;background:rgba(200,162,74,.14);border:1px solid var(--linha-forte);display:grid;place-items:center;color:var(--dourado);transition:.3s}
+.video:hover .pl{transform:scale(1.08)}.video .pl svg{width:22px;height:22px;margin-left:3px}
+.video .vlab{position:absolute;bottom:12px;left:16px;font-size:11px;color:var(--texto-fraco);letter-spacing:.1em}
+.lesson-body{padding:22px 34px 32px}
+.lesson-body h5{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dourado);margin:22px 0 12px}
+.obj{border-left:2px solid var(--acc);background:rgba(43,90,160,.1);padding:14px 18px;border-radius:0 12px 12px 0;font-size:14px;color:var(--texto-suave)}
+.resumo{font-size:15.5px;line-height:1.65;color:var(--texto)}
+.keypts{list-style:none;display:grid;gap:10px}
+.keypts li{display:flex;gap:12px;font-size:14.5px;line-height:1.5}
+.keypts li svg{width:16px;height:16px;color:var(--acc-2);flex:0 0 auto;margin-top:4px}
+.notes-area{width:100%;min-height:90px;background:var(--bg-0);border:1px solid var(--linha);border-radius:12px;padding:13px 15px;color:var(--off-white);font-family:var(--sans);font-size:14px;outline:none;line-height:1.6;resize:vertical}
+.notes-area:focus{border-color:var(--dourado)}
+.lesson-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;align-items:center}
+/* quiz */
+.quiz-top{padding:28px 34px 18px;position:relative}
+.quiz-top .tt{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dourado)}
+.quiz-top h3{font-size:24px;margin:6px 0}
+.qbar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:12px}
+.qbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--dourado));width:0;transition:width .4s var(--ease)}
+.qmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--texto-fraco);margin-top:8px}
+.quiz-body{padding:8px 34px 30px}
+.qtheme{display:inline-block;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--acc-2);border:1px solid var(--acc-line);border-radius:999px;padding:4px 11px;margin-bottom:14px}
+.qtext{font-size:17px;line-height:1.5;margin-bottom:20px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:13px;align-items:flex-start;padding:14px 16px;border:1px solid var(--linha);border-radius:12px;cursor:pointer;transition:.2s;font-size:14.5px}
+.opt:hover{border-color:var(--linha-forte);background:rgba(200,162,74,.05)}
+.opt .lt{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:1px solid var(--linha-forte);display:grid;place-items:center;font-family:var(--serif);font-size:13px;color:var(--dourado)}
+.opt.correct{border-color:var(--ok);background:rgba(95,191,143,.12)}.opt.correct .lt{background:var(--ok);color:#06210f;border-color:var(--ok)}
+.opt.wrong{border-color:var(--err);background:rgba(217,138,122,.12)}.opt.wrong .lt{background:var(--err);color:#2a0f0a;border-color:var(--err)}
+.opt.disabled{pointer-events:none}
+.comentario{margin-top:18px;border-left:2px solid var(--dourado);background:rgba(200,162,74,.08);padding:14px 18px;border-radius:0 12px 12px 0;font-size:14px;color:var(--texto-suave);display:none}
+.comentario.show{display:block;animation:pop .4s var(--ease)}.comentario b{color:var(--dourado)}
+.quiz-foot{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px}
+.qresult{text-align:center;padding:20px 20px 6px}
+.qresult .big{font-family:var(--serif);font-size:64px;color:var(--dourado);line-height:1}
+.qresult .lbl{font-size:13px;color:var(--texto-suave);margin-top:4px}
+.qbreak{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+.qbreak .qb{border:1px solid var(--linha);border-radius:12px;padding:12px 14px;text-align:left;font-size:13px}
+.qbreak .qb b{color:var(--dourado);font-family:var(--serif);font-size:17px;float:right}
+.theme-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 34px 30px}
+.tp{border:1px solid var(--linha);border-radius:12px;padding:15px 16px;cursor:pointer;transition:.25s;display:flex;justify-content:space-between;align-items:center}
+.tp:hover{border-color:var(--linha-forte);background:rgba(43,90,160,.1)}
+.tp b{font-size:14.5px}.tp span{font-size:12px;color:var(--texto-fraco)}
+.tp.full{grid-column:1/-1;background:var(--acc-soft);border-color:var(--acc-line)}
+/* flashcards */
+.fc-filters{display:flex;gap:7px;flex-wrap:wrap;padding:14px 34px 4px}
+.fc-filters button{font-size:12px;padding:7px 12px;border-radius:999px;border:1px solid var(--linha);background:transparent;color:var(--texto-suave);cursor:pointer;transition:.2s}
+.fc-filters button.on{background:var(--acc-soft);border-color:var(--acc-line);color:var(--acc-2)}
+.fc-stage{padding:12px 34px 6px;display:grid;place-items:center}
+.flashcard{width:100%;max-width:540px;height:280px;perspective:1400px;cursor:pointer}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flashcard.flip .fc-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;border:1px solid var(--linha-forte);display:grid;place-items:center;padding:34px;text-align:center;background:linear-gradient(160deg,var(--bg-1),var(--bg-0))}
+.fc-face .lab{position:absolute;top:16px;left:20px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dourado)}
+.fc-face .th{position:absolute;top:16px;right:20px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc-2)}
+.fc-front .q{font-family:var(--serif);font-size:22px;line-height:1.3}
+.fc-back{transform:rotateY(180deg);background:linear-gradient(160deg,rgba(43,90,160,.2),var(--bg-0))}
+.fc-back .a{font-size:16px;color:var(--off-white);line-height:1.5}
+.fc-hint{font-size:11px;color:var(--texto-fraco);margin-top:14px}
+.fc-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 34px 30px;gap:10px}
+/* tabelas */
+.tbls{padding:8px 34px 30px;display:grid;gap:22px}
+.tbl h4{font-family:var(--serif);font-size:17px;margin-bottom:10px;color:var(--dourado-claro)}
+.tbl table{width:100%;border-collapse:collapse;font-size:13.5px;border:1px solid var(--linha);border-radius:10px;overflow:hidden}
+.tbl th,.tbl td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--linha)}
+.tbl thead th{background:rgba(43,90,160,.18);color:var(--off-white);font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.03em}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody td:first-child{color:var(--texto);font-weight:500}
+.tbl tbody td{color:var(--texto-suave)}
+.tbl-search{margin:0 34px 4px;display:flex;align-items:center;gap:10px;background:var(--bg-0);border:1px solid var(--linha);border-radius:10px;padding:9px 13px}
+.tbl-search input{flex:1;background:transparent;border:none;outline:none;color:var(--off-white);font-size:14px;font-family:var(--sans)}
+/* mentorias / tcc */
+.mlist{padding:8px 34px 30px;display:grid;gap:12px}
+.mrow{border:1px solid var(--linha);border-radius:14px;background:var(--bg-1);overflow:hidden}
+.mrow-h{padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer}
+.mrow-h .mn{width:38px;height:38px;border-radius:10px;background:var(--acc-soft);border:1px solid var(--acc-line);display:grid;place-items:center;font-family:var(--serif);color:var(--acc-2);flex:0 0 auto}
+.mrow-h .mt b{font-size:14.5px;display:block}.mrow-h .mt span{font-size:12px;color:var(--texto-fraco)}
+.mrow-h svg{margin-left:auto;color:var(--texto-fraco);transition:.3s}.mrow.open svg.chev{transform:rotate(180deg)}
+.mrow-c{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}.mrow.open .mrow-c{max-height:600px}
+.mrow-in{padding:0 18px 18px}
+.mrow-in ul{list-style:none;display:grid;gap:8px;margin-top:8px}
+.mrow-in li{display:flex;gap:10px;font-size:13.5px;color:var(--texto)}
+.mrow-in li svg{width:15px;height:15px;color:var(--acc-2);flex:0 0 auto;margin-top:3px}
+.tcc-body{padding:8px 34px 30px}
+.tcc-abs{border-left:2px solid var(--dourado);background:rgba(200,162,74,.08);padding:16px 18px;border-radius:0 12px 12px 0;font-size:14.5px;color:var(--texto-suave);line-height:1.65}
+.tcc-sec{border:1px solid var(--linha);border-radius:12px;padding:14px 16px;margin-top:10px;background:var(--bg-1)}
+.tcc-sec b{font-size:14px;display:block;margin-bottom:3px}.tcc-sec span{font-size:13px;color:var(--texto-suave)}
+/* certificado */
+.cert{background:#fbf9f2;color:#0D1F3F;border-radius:14px;padding:44px;text-align:center;border:2px solid var(--dourado);position:relative;font-family:var(--serif)}
+.cert .cwrap{border:1px solid rgba(13,31,63,.2);border-radius:8px;padding:34px 26px}
+.cert .ceyebrow{font-family:var(--sans);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#B08A2E}
+.cert h2{font-size:30px;margin:14px 0}
+.cert .cname{font-size:26px;color:#0D1F3F;border-bottom:1px solid rgba(13,31,63,.25);display:inline-block;padding:4px 30px;margin:8px 0 14px}
+.cert p{font-family:var(--sans);font-size:13.5px;color:#3a4a63;line-height:1.6;max-width:60ch;margin:0 auto}
+.cert .csig{display:flex;justify-content:space-around;margin-top:34px;font-family:var(--sans);font-size:12px;color:#3a4a63}
+.cert .csig .l{border-top:1px solid rgba(13,31,63,.3);padding-top:6px;min-width:180px}
+.foot-grid{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:center}
+footer{position:relative;z-index:2;border-top:1px solid var(--linha);padding:52px 0 36px;background:linear-gradient(180deg,transparent,rgba(10,21,38,.6))}
+.disc{font-size:11.5px;color:var(--texto-fraco);max-width:74ch;margin-top:10px}
+.foot-legal{margin-top:34px;padding-top:20px;border-top:1px solid var(--linha);font-size:12px;color:var(--texto-fraco);display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(30px);z-index:130;background:var(--vidro-forte);border:1px solid var(--linha-forte);border-radius:999px;padding:12px 22px;font-size:13px;opacity:0;transition:.4s var(--ease);pointer-events:none;backdrop-filter:blur(10px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.reveal{opacity:0;transform:translateY(24px);transition:.85s var(--ease)}.reveal.in{opacity:1;transform:none}
+@media(max-width:900px){.extras{grid-template-columns:1fr 1fr}.conecta{grid-template-columns:1fr}.student{grid-template-columns:1fr;justify-items:center;text-align:center}.progress-pill{display:none}.theme-pick,.fc-filters{grid-template-columns:1fr}}
+@media(max-width:560px){section.band{padding:60px 0}.hero{padding:100px 0 40px}.extras{grid-template-columns:1fr}.trilha-side .tbar{display:none}.lesson-top,.lesson-body,.quiz-body,.quiz-top,.tbls,.mlist,.tcc-body,.fc-stage,.fc-nav,.theme-pick{padding-left:20px;padding-right:20px}.video{margin:0 20px}.qbreak{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.2s!important}}
+</style>
+</head>
+<body>
+<canvas id="bg3d"></canvas>
+<div class="veil"></div>
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="back" href="./morpheus-hub.html"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Hub</a>
+    <div class="brand" onclick="scrollTo({top:0,behavior:'smooth'})"><img src="__LOGO_DATA_URI__" alt="TN"/><div class="bt"><b>Educador</b><span>ENDO7 · Morpheus</span></div></div>
+    <div class="nav-sp">
+      <div class="progress-pill"><span>Progresso</span><div class="mini-bar"><i id="navBar"></i></div><b id="navPct">0%</b></div>
+      <button class="icon-btn" title="Salvar / Exportar progresso" onclick="Data.exportJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></button>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow reveal">Plataforma de ensino · Módulo Educador</div>
+      <h1 class="reveal">ENDO7 — o intensivo que vira <em>título</em>.</h1>
+      <p class="lead reveal">Curso completo, preparatório para o Título de Especialista em Endocrinologia e Metabologia (SBEM). Sete dias com conteúdo clínico real em cada aula, anotações, 198 flashcards, tabelas de alto rendimento, mentorias, simulado comentado e certificado.</p>
+      <div class="cta reveal">
+        <button class="btn btn-gold" id="continueBtn" onclick="App.continueLast()">Começar a estudar <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="btn btn-blue" onclick="Quiz.picker()">Fazer o simulado</button>
+        <button class="btn btn-ghost" onclick="Flash.open()">Flashcards</button>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="s"><b>7</b><span>Dias · trilhas</span></div>
+        <div class="s"><b id="stAulas">—</b><span>Aulas</span></div>
+        <div class="s"><b id="stFc">—</b><span>Flashcards</span></div>
+        <div class="s"><b id="stTbl">—</b><span>Tabelas</span></div>
+        <div class="s"><b>35</b><span>Questões</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="band" id="aluno">
+    <div class="wrap">
+      <div class="student reveal">
+        <div class="ring">
+          <svg width="130" height="130"><circle cx="65" cy="65" r="56" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle id="ringFill" cx="65" cy="65" r="56" fill="none" stroke="url(#g)" stroke-width="9" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="352"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2B5AA0"/><stop offset="1" stop-color="#C8A24A"/></linearGradient></defs></svg>
+          <div class="val"><b id="ringPct">0%</b><span>Concluído</span></div>
+        </div>
+        <div class="student-info">
+          <div class="eyebrow">Área do aluno</div>
+          <h3>Sua jornada rumo ao título</h3>
+          <p id="alunoMsg">Bem-vindo, Dr. Tenner. Cada aula agora traz o conteúdo clínico completo. Conclua as 55 aulas para liberar o certificado. Seu progresso e anotações ficam salvos neste dispositivo.</p>
+          <div class="chips-row">
+            <div class="stat-chip"><b id="scDone">0</b><span>aulas concluídas</span></div>
+            <div class="stat-chip"><b id="scTrilhas">0/7</b><span>trilhas iniciadas</span></div>
+            <div class="stat-chip"><b id="scQuiz">—</b><span>melhor simulado</span></div>
+            <button class="btn btn-gold" id="certBtn" disabled onclick="Cert.open()" style="padding:11px 18px">Emitir certificado</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="band" id="trilhas">
+    <div class="wrap">
+      <div class="sec-head reveal"><div class="eyebrow">O curso · 7 dias</div><h2>As trilhas do intensivo</h2><p>Cada dia é uma trilha temática com suas aulas. Abra uma aula para ver o conteúdo clínico, fazer anotações e marcar como concluída.</p></div>
+      <div class="trilhas" id="trilhasList"></div>
+    </div>
+  </section>
+  <div class="wrap"><div class="divider"></div></div>
+  <section class="band" id="extras">
+    <div class="wrap">
+      <div class="sec-head reveal"><div class="eyebrow">Recursos de estudo</div><h2>Além das aulas</h2><p>As ferramentas de estudo ativo que consolidam o conteúdo e preparam para a prova.</p></div>
+      <div class="extras" id="extrasGrid"></div>
+    </div>
+  </section>
+  <div class="wrap"><div class="divider"></div></div>
+  <section class="band" id="conecta">
+    <div class="wrap">
+      <div class="sec-head reveal"><div class="eyebrow">Dentro do ecossistema</div><h2>O Educador conversa com o resto</h2></div>
+      <div class="conecta reveal">
+        <a onclick="App.cross('curador')"><div class="ci" style="background:rgba(200,162,74,.14);border:1px solid var(--linha);color:var(--dourado)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z"/></svg></div><div><b class="gold">Curador</b><p>Transforme um tema de aula em conteúdo para o Instagram, no compliance CFM.</p></div></a>
+        <a onclick="App.cross('prontuario')"><div class="ci" style="background:rgba(230,205,140,.14);border:1px solid var(--linha);color:var(--dourado-claro)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M9 3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2H9V3Z"/></svg></div><div><b style="color:var(--dourado-claro)">Prontuário</b><p>Prescreva materiais educativos ao paciente como orientação.</p></div></a>
+      </div>
+    </div>
+  </section>
+  <footer><div class="wrap">
+    <div class="foot-grid"><div class="brand"><img src="__LOGO_DATA_URI__" alt="TN"/><div class="bt"><b>Dr. Tenner Nunes</b><span>Medicina do Estilo de Vida</span></div></div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap"><a class="back" href="./morpheus-hub.html">Voltar ao Hub</a><button class="btn btn-ghost" style="padding:9px 16px;font-size:13px" onclick="Data.importJSON()">Importar progresso</button></div></div>
+    <p class="disc">Conteúdo educacional de formação médica continuada — destinado a médicos e estudantes. Baseado no programa do curso ENDO7. Não substitui as diretrizes oficiais da SBEM nem a bula dos medicamentos. Comunicação conforme a Resolução CFM nº 2.336/2023.</p>
+    <div class="foot-legal"><span>© <span id="yr"></span> Dr. Tenner Nunes · Instituto Vitality · CRM/RR 2920</span><span>Morpheus · Educador v2.0</span></div>
+  </div></footer>
+</main>
+<div class="overlay" id="ovLesson" onclick="if(event.target===this)UI.close('ovLesson')"><div class="sheet" id="lessonSheet"></div></div>
+<div class="overlay" id="ovQuiz" onclick="if(event.target===this)UI.close('ovQuiz')"><div class="sheet" id="quizSheet"></div></div>
+<div class="overlay" id="ovFc" onclick="if(event.target===this)UI.close('ovFc')"><div class="sheet" id="fcSheet"></div></div>
+<div class="overlay" id="ovTbl" onclick="if(event.target===this)UI.close('ovTbl')"><div class="sheet wide" id="tblSheet"></div></div>
+<div class="overlay" id="ovMent" onclick="if(event.target===this)UI.close('ovMent')"><div class="sheet" id="mentSheet"></div></div>
+<div class="overlay" id="ovTcc" onclick="if(event.target===this)UI.close('ovTcc')"><div class="sheet" id="tccSheet"></div></div>
+<div class="overlay" id="ovCert" onclick="if(event.target===this)UI.close('ovCert')"><div class="sheet wide" id="certSheet"></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="fileIn" accept="application/json" style="display:none"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/*__ENDO7__*/
+/*__QUESTOES__*/
+
+/* metadados dos dias (título + dia da semana) */
+const DAYMETA=[
+  {tt:"Dia 1 · Segunda",titulo:"Fundamentos e Bases Científicas"},
+  {tt:"Dia 2 · Terça",titulo:"Tireoide — o maior tema da prova"},
+  {tt:"Dia 3 · Quarta",titulo:"Diabetes Mellitus (25% da prova)"},
+  {tt:"Dia 4 · Quinta",titulo:"Obesidade, Metabolismo e Dislipidemias"},
+  {tt:"Dia 5 · Sexta",titulo:"Adrenais, Reprodução e Neuroendócrino"},
+  {tt:"Dia 6 · Sábado",titulo:"Temas Especiais e Interdisciplinares"},
+  {tt:"Dia 7 · Domingo",titulo:"Revisão, Tabelas e Estratégia de Prova"},
+];
+const COURSE={trilhas:ENDO7.dias.map((d,i)=>({n:d.n,tt:DAYMETA[i].tt,titulo:DAYMETA[i].titulo,obj:d.objetivo,aulas:d.topicos}))};
+const EXTRAS=[
+  {slug:"simulado",badge:"35 questões",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>',t:"Simulado SBEM",d:"Questões estilo prova de título, com gabarito comentado por tema."},
+  {slug:"flashcards",badge:"198 cards",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="14" height="16" rx="2"/><path d="M7 5V3h12a2 2 0 0 1 2 2v14"/></svg>',t:"Flashcards",d:"Revisão ativa dos conceitos mais cobrados, por tema, com filtro e embaralhar."},
+  {slug:"tabelas",badge:"12 tabelas",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',t:"Tabelas de alto rendimento",d:"Critérios, valores de referência e classes — o mapa rápido para a prova."},
+  {slug:"mentorias",badge:"7 módulos",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></svg>',t:"Mentorias",d:"Revisão guiada por dia, com o raciocínio e as perguntas de cada módulo."},
+  {slug:"tcc",badge:"modelo",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>',t:"TCC modelo",d:"Trabalho completo (arGLP-1 no DM2) como referência de raciocínio científico."},
+  {slug:"certificado",badge:"conclusão",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.5 7 22l5-3 5 3-1.2-8.5"/></svg>',t:"Certificado",d:"Emitido ao concluir as 55 aulas — em Word/PDF, com seu nome."},
+];
+/* estado */
+const Store=(()=>{const KEY="morpheus_educador_v2";let mem=null,ok=true;try{localStorage.setItem("__t","1");localStorage.removeItem("__t");}catch(e){ok=false;}return{load(){try{if(ok){const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}}catch(e){}return mem;},save(d){try{if(ok){localStorage.setItem(KEY,JSON.stringify(d));return;}}catch(e){}mem=JSON.parse(JSON.stringify(d));}};})();
+let STATE={done:{},notes:{},bestQuiz:null,last:null,nome:"Dr. Tenner Nunes"};
+const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+const key=(t,i)=>`t${t}_a${i}`;
+function totalAulas(){return COURSE.trilhas.reduce((s,t)=>s+t.aulas.length,0);}
+function doneCount(){return Object.values(STATE.done).filter(Boolean).length;}
+const UI={open(id){$('#'+id).classList.add('open');document.body.classList.add('no-scroll');},close(id){$('#'+id).classList.remove('open');document.body.classList.remove('no-scroll');}};
+
+function renderTrilhas(){
+  const wrap=$('#trilhasList');wrap.innerHTML='';
+  COURSE.trilhas.forEach(t=>{
+    const feitas=t.aulas.filter((_,i)=>STATE.done[key(t.n,i)]).length;
+    const pct=Math.round(feitas/t.aulas.length*100);
+    const el=document.createElement('div');el.className='trilha';el.dataset.n=t.n;
+    el.innerHTML=`<div class="trilha-h" onclick="this.parentNode.classList.toggle('open')">
+      <div class="trilha-num"><small>Dia</small><b>${t.n}</b></div>
+      <div class="trilha-main"><div class="tt">${t.tt}</div><h3>${esc(t.titulo)}</h3><p>${t.aulas.length} aulas · ${esc(t.obj.slice(0,64))}…</p></div>
+      <div class="trilha-side"><div class="tprog"><b>${pct}%</b><span>${feitas}/${t.aulas.length}</span><div class="tbar"><i style="width:${pct}%"></i></div></div>
+      <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div></div>
+      <div class="aulas"><div class="aulas-in">${t.aulas.map((a,i)=>`<div class="aula ${STATE.done[key(t.n,i)]?'done':''}" onclick="App.openLesson(${t.n},${i})">
+        <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <div class="an"><b>${esc(a.titulo)}</b><span>Aula ${i+1} · Dia ${t.n}</span></div>
+        ${STATE.notes[key(t.n,i)]?'<span class="nt" title="Você tem anotações"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>':''}
+        <div class="play"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>`).join('')}</div></div>`;
+    wrap.appendChild(el);
+  });
+}
+function renderExtras(){$('#extrasGrid').innerHTML=EXTRAS.map(e=>`<div class="extra reveal" onclick="App.openExtra('${e.slug}')"><span class="badge">${e.badge}</span><div class="ei">${e.icon}</div><h4>${e.t}</h4><p>${e.d}</p></div>`).join('');observeReveal();}
+function updateProgress(){
+  const total=totalAulas(),done=doneCount();const pct=total?Math.round(done/total*100):0;
+  $('#ringPct').textContent=pct+'%';const circ=2*Math.PI*56;$('#ringFill').style.strokeDashoffset=circ-(circ*pct/100);
+  $('#navBar').style.width=pct+'%';$('#navPct').textContent=pct+'%';$('#scDone').textContent=done;
+  const inic=COURSE.trilhas.filter(t=>t.aulas.some((_,i)=>STATE.done[key(t.n,i)])).length;$('#scTrilhas').textContent=inic+'/7';
+  $('#scQuiz').textContent=STATE.bestQuiz!=null?STATE.bestQuiz+'%':'—';
+  $('#stAulas').textContent=total;$('#stFc').textContent=ENDO7.flashcards.length;$('#stTbl').textContent=ENDO7.tabelas.length;
+  const cert=$('#certBtn');cert.disabled=done<total;cert.textContent=done<total?`Certificado (${done}/${total})`:'Emitir certificado';
+  const btn=$('#continueBtn');btn.innerHTML=(done>0?'Continuar de onde parei':'Começar a estudar')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+}
+const App={
+  openLesson(n,i){
+    const t=COURSE.trilhas.find(x=>x.n===n);const a=t.aulas[i];const done=!!STATE.done[key(n,i)];STATE.last={n,i};Store.save(STATE);
+    $('#lessonSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovLesson')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="lesson-top"><div class="tt">${t.tt} · Aula ${i+1} de ${t.aulas.length}</div><h3>${esc(a.titulo)}</h3></div>
+      <div class="video"><div class="pl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><span class="vlab">Videoaula · conteúdo de estudo abaixo</span></div>
+      <div class="lesson-body">
+        <h5>Resumo da aula</h5><div class="resumo">${esc(a.resumo)}</div>
+        <h5>Pontos-chave</h5><ul class="keypts">${a.pontos.map(p=>`<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span>${esc(p)}</span></li>`).join('')}</ul>
+        <h5>Objetivo da trilha</h5><div class="obj">${esc(t.obj)}</div>
+        <h5>Minhas anotações</h5><textarea class="notes-area" id="noteArea" placeholder="Escreva aqui suas anotações desta aula — ficam salvas neste dispositivo.">${esc(STATE.notes[key(n,i)]||'')}</textarea>
+        <div class="lesson-actions">
+          <button class="btn ${done?'btn-ghost':'btn-blue'}" id="markBtn" onclick="App.toggleDone(${n},${i})">${done?'✓ Concluída — desmarcar':'Marcar como concluída'}</button>
+          ${i<t.aulas.length-1?`<button class="btn btn-ghost" onclick="App.openLesson(${n},${i+1})">Próxima aula →</button>`:''}
+          <button class="btn btn-ghost" onclick="App.cross('curador')">Virar conteúdo ↗</button>
+        </div>
+      </div>`;
+    UI.open('ovLesson');
+    $('#noteArea').addEventListener('input',e=>{const k=key(n,i);if(e.target.value.trim())STATE.notes[k]=e.target.value;else delete STATE.notes[k];Store.save(STATE);});
+  },
+  toggleDone(n,i){STATE.done[key(n,i)]=!STATE.done[key(n,i)];Store.save(STATE);renderTrilhas();updateProgress();const tr=$(`.trilha[data-n="${n}"]`);if(tr)tr.classList.add('open');const b=$('#markBtn');const done=STATE.done[key(n,i)];if(b){b.className='btn '+(done?'btn-ghost':'btn-blue');b.textContent=done?'✓ Concluída — desmarcar':'Marcar como concluída';}toast(done?'Aula concluída ✓':'Marcação removida');if(doneCount()===totalAulas())toast('Parabéns! Curso concluído — certificado liberado.');},
+  continueLast(){const l=STATE.last||{n:1,i:0};document.getElementById('trilhas').scrollIntoView({behavior:'smooth'});setTimeout(()=>this.openLesson(l.n,l.i),400);},
+  openExtra(slug){if(slug==='simulado')return Quiz.picker();if(slug==='flashcards')return Flash.open();if(slug==='tabelas')return Tabelas.open();if(slug==='mentorias')return Mentorias.open();if(slug==='tcc')return Tcc.open();if(slug==='certificado')return Cert.open();},
+  cross(mod){toast((mod==='curador'?'Abrindo o Curador para transformar o tema em conteúdo':'Abrindo o Prontuário')+' — integração entre módulos (a conectar).');}
+};
+/* QUIZ */
+const Quiz={set:[],idx:0,score:0,answered:false,byTheme:{},
+  picker(){const temas=[...new Set(QUESTOES.map(q=>q.tema))];
+    $('#quizSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovQuiz')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="quiz-top"><div class="tt">Simulado SBEM</div><h3>Escolha o foco</h3><p class="muted" style="font-size:13.5px;margin-top:4px">Questões estilo prova de título, com gabarito comentado.</p></div>
+      <div class="theme-pick"><div class="tp full" onclick="Quiz.start(null)"><b>Simulado completo</b><span>${QUESTOES.length} questões</span></div>${temas.map(t=>`<div class="tp" onclick="Quiz.start('${t}')"><b>${t}</b><span>${QUESTOES.filter(q=>q.tema===t).length} questões</span></div>`).join('')}</div>`;
+    UI.open('ovQuiz');},
+  start(tema){this.set=(tema?QUESTOES.filter(q=>q.tema===tema):QUESTOES.slice());this.idx=0;this.score=0;this.byTheme={};this.answered=false;this.render();},
+  render(){const q=this.set[this.idx];const total=this.set.length;
+    $('#quizSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovQuiz')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="quiz-top"><div class="tt">Simulado · questão ${this.idx+1} de ${total}</div><div class="qbar"><i style="width:${this.idx/total*100}%"></i></div><div class="qmeta"><span>Acertos: ${this.score}</span><span>${Math.round(this.idx/total*100)}%</span></div></div>
+      <div class="quiz-body"><span class="qtheme">${q.tema}</span><div class="qtext">${esc(q.q)}</div>
+      <div class="opts" id="opts">${q.o.map((op,i)=>`<div class="opt" data-i="${i}" onclick="Quiz.answer(${i})"><span class="lt">${String.fromCharCode(65+i)}</span><span>${esc(op)}</span></div>`).join('')}</div>
+      <div class="comentario" id="coment"><b>Comentário.</b> ${esc(q.c)}</div>
+      <div class="quiz-foot"><span class="muted" style="font-size:12.5px">Tema: ${q.tema}</span><button class="btn btn-blue" id="nextBtn" style="visibility:hidden" onclick="Quiz.next()">Próxima →</button></div></div>`;},
+  answer(i){if(this.answered)return;this.answered=true;const q=this.set[this.idx];const opts=$$('#opts .opt');opts.forEach(o=>o.classList.add('disabled'));opts[q.a].classList.add('correct');if(i===q.a)this.score++;else opts[i].classList.add('wrong');this.byTheme[q.tema]=this.byTheme[q.tema]||{ok:0,n:0};this.byTheme[q.tema].n++;if(i===q.a)this.byTheme[q.tema].ok++;$('#coment').classList.add('show');$('#nextBtn').style.visibility='visible';$('#nextBtn').textContent=this.idx<this.set.length-1?'Próxima →':'Ver resultado';},
+  next(){this.answered=false;if(this.idx<this.set.length-1){this.idx++;this.render();}else this.result();},
+  result(){const total=this.set.length;const pct=Math.round(this.score/total*100);if(total===QUESTOES.length){if(STATE.bestQuiz==null||pct>STATE.bestQuiz){STATE.bestQuiz=pct;Store.save(STATE);updateProgress();}}const msg=pct>=70?'Acima da nota de corte típica. Muito bom.':pct>=50?'Perto da nota de corte — reforce os temas com mais erros.':'Vale revisar as trilhas antes de repetir.';
+    $('#quizSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovQuiz')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="quiz-top"><div class="tt">Resultado</div></div><div class="quiz-body"><div class="qresult"><div class="big">${pct}%</div><div class="lbl">${this.score} de ${total} corretas · ${msg}</div></div><div class="qbreak">${Object.entries(this.byTheme).map(([t,v])=>`<div class="qb">${t}<b>${Math.round(v.ok/v.n*100)}%</b><br><span class="muted" style="font-size:11.5px">${v.ok}/${v.n}</span></div>`).join('')}</div><div class="quiz-foot" style="justify-content:center;gap:12px"><button class="btn btn-blue" onclick="Quiz.picker()">Novo simulado</button><button class="btn btn-ghost" onclick="UI.close('ovQuiz')">Fechar</button></div></div>`;}
+};
+/* FLASHCARDS (198) */
+const Flash={i:0,filtro:"Todos",deck:[],
+  open(){this.filtro="Todos";this.build();this.i=0;this.render();UI.open('ovFc');},
+  build(){this.deck=this.filtro==="Todos"?ENDO7.flashcards.slice():ENDO7.flashcards.filter(f=>f.tema===this.filtro);},
+  temas(){return["Todos",...new Set(ENDO7.flashcards.map(f=>f.tema))];},
+  render(){const c=this.deck[this.i]||{f:"—",b:"—",tema:""};
+    $('#fcSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovFc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="quiz-top"><div class="tt">Flashcards · ${this.i+1}/${this.deck.length}</div><h3>Revisão ativa</h3></div>
+      <div class="fc-filters">${this.temas().map(t=>`<button class="${t===this.filtro?'on':''}" onclick="Flash.setFiltro('${t}')">${t}</button>`).join('')}</div>
+      <div class="fc-stage"><div class="flashcard" id="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner">
+        <div class="fc-face fc-front"><span class="lab">Pergunta</span><span class="th">${esc(c.tema)}</span><div><div class="q">${esc(c.f)}</div><div class="fc-hint">toque para ver a resposta</div></div></div>
+        <div class="fc-face fc-back"><span class="lab">Resposta</span><span class="th">${esc(c.tema)}</span><div class="a">${esc(c.b)}</div></div></div></div></div>
+      <div class="fc-nav"><button class="btn btn-ghost" onclick="Flash.prev()">← Anterior</button><button class="btn btn-ghost" onclick="Flash.shuffle()">Embaralhar</button><button class="btn btn-blue" onclick="Flash.next()">Próximo →</button></div>`;},
+  setFiltro(t){this.filtro=t;this.build();this.i=0;this.render();},
+  next(){this.i=(this.i+1)%this.deck.length;this.render();},
+  prev(){this.i=(this.i-1+this.deck.length)%this.deck.length;this.render();},
+  shuffle(){for(let k=this.deck.length-1;k>0;k--){const j=(k*7+3)%(k+1);[this.deck[k],this.deck[j]]=[this.deck[j],this.deck[k]];}this.i=0;this.render();toast('Baralho embaralhado.');}
+};
+/* TABELAS */
+const Tabelas={
+  open(){this.render('');UI.open('ovTbl');setTimeout(()=>$('#tblSearch')&&$('#tblSearch').focus(),150);},
+  render(q){const term=norm(q||'');const list=ENDO7.tabelas.filter(t=>!term||norm(t.titulo+' '+JSON.stringify(t.linhas)).includes(term));
+    $('#tblSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovTbl')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="quiz-top"><div class="tt">Referência rápida</div><h3>Tabelas de alto rendimento</h3></div>
+      <div class="tbl-search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--texto-fraco)" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input id="tblSearch" placeholder="Buscar critério, valor, tema…" oninput="Tabelas.render(this.value)" value="${esc(q||'')}"/></div>
+      <div class="tbls">${list.map(t=>{const head=t.linhas[0];const rows=t.linhas.slice(1);return `<div class="tbl"><h4>${esc(t.titulo)}</h4><table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}).join('')||'<p class="muted" style="padding:0 34px 20px">Nada encontrado.</p>'}</div>`;
+    if(q)setTimeout(()=>{const el=$('#tblSearch');if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length);}},0);}
+};
+/* MENTORIAS */
+const Mentorias={
+  open(){$('#mentSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovMent')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="quiz-top"><div class="tt">Revisão guiada</div><h3>Mentorias — módulo a módulo</h3></div>
+    <div class="mlist">${ENDO7.mentorias.map(m=>`<div class="mrow"><div class="mrow-h" onclick="this.parentNode.classList.toggle('open')"><div class="mn">${m.dia}</div><div class="mt"><b>${esc(m.titulo)}</b><span>Dia ${m.dia}</span></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div><div class="mrow-c"><div class="mrow-in"><p class="muted" style="font-size:13.5px">${esc(m.descricao)}</p><ul>${m.questoes.map(q=>`<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg><span>${esc(q)}</span></li>`).join('')}</ul></div></div></div>`).join('')}</div>`;
+    UI.open('ovMent');}
+};
+/* TCC */
+const Tcc={
+  open(){const t=ENDO7.tcc;$('#tccSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovTcc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="lesson-top"><div class="tt">TCC modelo · ${esc(t.tema)}</div><h3>${esc(t.titulo)}</h3></div>
+    <div class="tcc-body"><h5 style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dourado);margin-bottom:12px">Resumo</h5><div class="tcc-abs">${esc(t.resumo)}</div>
+      <h5 style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dourado);margin:22px 0 8px">Estrutura</h5>
+      ${t.secoes.map(s=>`<div class="tcc-sec"><b>${esc(s.t)}</b><span>${esc(s.c)}</span></div>`).join('')}
+      <div class="lesson-actions"><button class="btn btn-blue" onclick="Tcc.exportar()">Exportar modelo (.doc)</button><button class="btn btn-ghost" onclick="UI.close('ovTcc')">Fechar</button></div></div>`;
+    UI.open('ovTcc');},
+  exportar(){const t=ENDO7.tcc;const html=`<html xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"></head><body style="font-family:Georgia,serif;color:#0D1F3F"><h2 style="text-align:center">${esc(t.titulo)}</h2><p style="text-align:center;color:#777;font-family:Arial">${esc(t.tema)} · Curso ENDO7 · Dr. Tenner Nunes</p><h3>Resumo</h3><p style="font-family:Arial;font-size:13px">${esc(t.resumo)}</p>${t.secoes.map(s=>`<h3>${esc(s.t)}</h3><p style="font-family:Arial;font-size:13px">${esc(s.c)}</p>`).join('')}</body></html>`;const blob=new Blob(['﻿',html],{type:'application/msword'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TCC-modelo-endo7.doc';a.click();URL.revokeObjectURL(a.href);toast('Modelo de TCC exportado (.doc).');}
+};
+/* CERTIFICADO */
+const Cert={
+  open(){const done=doneCount(),total=totalAulas();const dataStr=new Date().toLocaleDateString('pt-BR');const completo=done>=total;
+    $('#certSheet').innerHTML=`<button class="icon-btn sheet-close" onclick="UI.close('ovCert')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="quiz-top"><div class="tt">Certificado</div><h3>${completo?'Curso concluído 🎓':'Ainda em andamento'}</h3></div>
+      <div style="padding:0 34px 18px"><div class="lesson-actions" style="margin:0 0 16px"><label style="font-size:12px;color:var(--texto-suave)">Nome no certificado:</label><input id="certNome" value="${esc(STATE.nome)}" style="flex:1;min-width:200px;background:var(--bg-0);border:1px solid var(--linha);border-radius:10px;padding:10px 13px;color:var(--off-white);font-size:14px" oninput="STATE.nome=this.value;Store.save(STATE);Cert.paint()"/></div>
+        <div id="certArea"></div>
+        <div class="lesson-actions">${completo?`<button class="btn btn-gold" onclick="Cert.gerar()">Baixar certificado (.doc)</button><button class="btn btn-ghost" onclick="Cert.imprimir()">Imprimir / PDF</button>`:`<p class="muted" style="font-size:13.5px">Conclua as ${total} aulas para liberar a emissão (${done}/${total}).</p>`}</div></div>`;
+    this.paint();UI.open('ovCert');},
+  html(){const dataStr=new Date().toLocaleDateString('pt-BR');const best=STATE.bestQuiz!=null?` Simulado final: ${STATE.bestQuiz}%.`:'';
+    return `<div class="cert"><div class="cwrap"><div class="ceyebrow">Instituto Vitality · Educação Médica Continuada</div><h2>Certificado de Conclusão</h2><p style="margin-bottom:6px">Certificamos que</p><div class="cname">${esc(STATE.nome||'—')}</div><p>concluiu o curso <b>ENDO7 — Preparatório para o Título de Especialista em Endocrinologia e Metabologia (SBEM)</b>, com carga horária de aproximadamente 91 horas, contemplando as 7 trilhas e 55 aulas do programa.${best}</p><div class="csig"><div class="l">Dr. Tenner Nunes · CRM/RR 2920</div><div class="l">${dataStr}</div></div></div></div>`;},
+  paint(){const a=$('#certArea');if(a)a.innerHTML=this.html();},
+  gerar(){const html=`<html xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"></head><body>${this.html().replace(/class="[^"]*"/g,'')}</body></html>`;const blob=new Blob(['﻿',html],{type:'application/msword'});const el=document.createElement('a');el.href=URL.createObjectURL(blob);el.download='certificado-endo7.doc';el.click();URL.revokeObjectURL(el.href);toast('Certificado gerado (.doc).');},
+  imprimir(){const w=window.open('','_blank');if(!w){toast('Permita pop-ups para imprimir.');return;}w.document.write(`<html><head><title>Certificado ENDO7</title></head><body style="background:#fff;padding:40px;font-family:Georgia,serif">${this.html()}<style>.cert{background:#fbf9f2;color:#0D1F3F;border-radius:14px;padding:44px;text-align:center;border:2px solid #C8A24A}.cwrap{border:1px solid rgba(13,31,63,.2);border-radius:8px;padding:34px}.ceyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#B08A2E}.cname{font-size:26px;border-bottom:1px solid #999;display:inline-block;padding:4px 30px;margin:8px 0 14px}.csig{display:flex;justify-content:space-around;margin-top:34px;font-size:12px}.csig .l{border-top:1px solid #999;padding-top:6px;min-width:180px}</style></body></html>`);w.document.close();setTimeout(()=>w.print(),350);}
+};
+/* DATA export/import */
+const Data={
+  exportJSON(){Store.save(STATE);const payload={curso:"endo7",estado:STATE,exportadoEm:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='morpheus-educador-progresso.json';a.click();URL.revokeObjectURL(a.href);toast('Progresso salvo e exportado.');},
+  importJSON(){$('#fileIn').click();}
+};
+$('#fileIn').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.estado){STATE=Object.assign({done:{},notes:{},bestQuiz:null,last:null,nome:"Dr. Tenner Nunes"},d.estado);Store.save(STATE);renderTrilhas();updateProgress();toast('Progresso importado.');}else toast('Arquivo inválido.');}catch(err){toast('Não consegui ler esse JSON.');}};r.readAsText(f);e.target.value='';});
+/* 3D hélice */
+(function scene3d(){if(!window.THREE){$('#bg3d').style.display='none';return;}const canvas=$('#bg3d');const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});const isMobile=matchMedia('(max-width:768px)').matches;renderer.setPixelRatio(Math.min(devicePixelRatio,isMobile?1.5:2));const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x080B12,0.05);const cam=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,100);cam.position.set(0,0,16);const GOLD=0xC8A24A,BLUE=0x2B5AA0;const helix=new THREE.Group();const turns=5,perTurn=22,tot=turns*perTurn,R=2.2,H=14;const sph=new THREE.SphereGeometry(0.12,12,12);const mG=new THREE.MeshBasicMaterial({color:GOLD});const mB=new THREE.MeshBasicMaterial({color:0x6C90C8});for(let i=0;i<tot;i++){const th=i/perTurn*Math.PI*2;const y=(i/tot-0.5)*H;const a=new THREE.Mesh(sph,mG);a.position.set(Math.cos(th)*R,y,Math.sin(th)*R);helix.add(a);const b=new THREE.Mesh(sph,mB);b.position.set(Math.cos(th+Math.PI)*R,y,Math.sin(th+Math.PI)*R);helix.add(b);if(i%2===0){const g=new THREE.BufferGeometry().setFromPoints([a.position,b.position]);helix.add(new THREE.Line(g,new THREE.LineBasicMaterial({color:BLUE,transparent:true,opacity:.35})));}}helix.rotation.z=0.35;scene.add(helix);const N=isMobile?900:1700;const pos=new Float32Array(N*3),col=new Float32Array(N*3);const cG=new THREE.Color(GOLD),cB=new THREE.Color(0x3E5C8A),cO=new THREE.Color(0xF4F2EA);for(let i=0;i<N;i++){const r=8+Math.random()*10,t=Math.random()*Math.PI*2,p=Math.acos(2*Math.random()-1);pos[i*3]=r*Math.sin(p)*Math.cos(t);pos[i*3+1]=r*Math.sin(p)*Math.sin(t);pos[i*3+2]=r*Math.cos(p);const pk=Math.random();const c=pk<.14?cG:pk<.26?cO:cB;col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;}const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pos,3));pg.setAttribute('color',new THREE.BufferAttribute(col,3));scene.add(new THREE.Points(pg,new THREE.PointsMaterial({size:0.05,vertexColors:true,transparent:true,opacity:.8,blending:THREE.AdditiveBlending,depthWrite:false})));let mx=0,my=0,tx=0,ty=0,running=true;addEventListener('mousemove',e=>{tx=e.clientX/innerWidth-.5;ty=e.clientY/innerHeight-.5;},{passive:true});document.addEventListener('visibilitychange',()=>{running=!document.hidden;if(running)loop();});addEventListener('resize',resize);function resize(){renderer.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}resize();function loop(){if(!running)return;requestAnimationFrame(loop);mx+=(tx-mx)*0.04;my+=(ty-my)*0.04;helix.rotation.y+=0.004;helix.position.x=4+mx*1.5;helix.position.y=-my*1.2;scene.rotation.y+=0.0004;cam.position.x+=(mx*2-cam.position.x)*0.05;cam.position.y+=(-my*1.6-cam.position.y)*0.05;cam.lookAt(0,0,0);renderer.render(scene,cam);}loop();})();
+let _io;function observeReveal(){if(_io)_io.disconnect();_io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');_io.unobserve(e.target);}}),{threshold:.12});$$('.reveal:not(.in)').forEach(el=>_io.observe(el));}
+addEventListener('scroll',()=>{$('#nav').classList.toggle('solid',scrollY>40);},{passive:true});
+addEventListener('keydown',e=>{if(e.key==='Escape')['ovLesson','ovQuiz','ovFc','ovTbl','ovMent','ovTcc','ovCert'].forEach(id=>UI.close(id));});
+(function init(){const s=Store.load();if(s)STATE=Object.assign(STATE,s);$('#yr').textContent=new Date().getFullYear();renderTrilhas();renderExtras();updateProgress();observeReveal();if('speechSynthesis'in window)speechSynthesis.getVoices();})();
+</script>
+</body>
+</html>

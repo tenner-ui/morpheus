@@ -656,12 +656,26 @@ const Proposta={
    BIBLIOTECA de protocolos salvos
    ========================================================= */
 const Lib={
+  _cloud:[],
   open(){
     UI.sheet('Meus protocolos',
       DB.protocolos.length?`<div class="lib">${DB.protocolos.map(pr=>`<div class="libcard" onclick="Lib.abrir('${pr.id}')"><b>${esc(pr.titulo)}</b><span>${pr.paciente?esc(pr.paciente)+' · ':''}${esc(pr.objetivo)}</span><div class="lx"><span>${pr.itens.length} itens</span><span>${new Date(pr.criadoEm).toLocaleDateString('pt-BR')}</span></div></div>`).join('')}</div>`
       :'<p class="note">Nenhum protocolo salvo ainda. Gere um protocolo e clique em "Salvar protocolo".</p>',
-      `<button class="btn btn-ghost" onclick="UI.close()">Fechar</button>`);
+      `<button class="btn btn-ghost" onclick="Lib.nuvem()">☁ Da nuvem</button><button class="btn btn-ghost" onclick="UI.close()">Fechar</button>`);
   },
+  async nuvem(){
+    if(!window.MorpheusDB){toast('Nuvem indisponível.');return;}
+    let u=null; try{ u=await MorpheusDB.user(); }catch(e){}
+    if(!u){toast('Entre na sua conta (no hub) para ver os protocolos da nuvem.');return;}
+    const foot=`<button class="btn btn-ghost" onclick="Lib.open()">← Meus protocolos</button><button class="btn btn-ghost" onclick="UI.close()">Fechar</button>`;
+    UI.sheet('Protocolos na nuvem','<p class="note">Carregando…</p>',foot);
+    try{
+      const rows=await MorpheusDB.listProtocolos(); Lib._cloud=rows||[];
+      const body=Lib._cloud.length?`<div class="lib">${Lib._cloud.map((pr,ix)=>`<div class="libcard" onclick="Lib.abrirCloud(${ix})"><b>${esc(pr.titulo||'(sem título)')}</b><span>${pr.paciente?esc(pr.paciente)+' · ':''}${esc(pr.objetivo||'')}</span><div class="lx"><span>${(pr.itens||[]).length} itens</span><span>${pr.criado_em?new Date(pr.criado_em).toLocaleDateString('pt-BR'):''}</span></div></div>`).join('')}</div>`:'<p class="note">Nenhum protocolo na nuvem ainda. Salve um protocolo para sincronizar.</p>';
+      UI.sheet('Protocolos na nuvem',body,foot);
+    }catch(e){ UI.sheet('Protocolos na nuvem','<p class="note">Falha ao carregar da nuvem: '+esc(e.message||String(e))+'</p>',foot); }
+  },
+  abrirCloud(ix){const pr=Lib._cloud[ix];if(!pr)return;P={id:'cloud-'+(pr.id||Date.now()),paciente:pr.paciente||'',titulo:pr.titulo||'',queixa:pr.queixa||'',objetivo:pr.objetivo||'',semanas:pr.semanas||0,itens:JSON.parse(JSON.stringify(pr.itens||[])),validade:pr.validade||15,entrada:pr.entrada||30,criadoEm:pr.criado_em||new Date().toISOString()};$('#spac').value=P.paciente||'';$('#stit').value=P.titulo||'';$('#squeixa').value=P.queixa||'';UI.close();renderEditor();renderSummary();document.querySelector('.builder').scrollIntoView({behavior:'smooth'});toast('Protocolo carregado da nuvem.');},
   abrir(id){const pr=DB.protocolos.find(x=>x.id===id);if(!pr)return;P=JSON.parse(JSON.stringify(pr));$('#spac').value=P.paciente||'';$('#stit').value=P.titulo||'';$('#squeixa').value=P.queixa||'';UI.close();renderEditor();renderSummary();document.querySelector('.builder').scrollIntoView({behavior:'smooth'});toast('Protocolo carregado.');}
 };
 const UI={sheet(t,b,f){$('#sheet').innerHTML=`<div class="sheet-h"><div><div class="eyebrow">Protocolos</div><h3>${esc(t)}</h3></div><button class="icon-btn" onclick="UI.close()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="sheet-b">${b}</div>${f?`<div class="sheet-f">${f}</div>`:''}`;$('#ov').classList.add('open');document.body.classList.add('no-scroll');},close(){$('#ov').classList.remove('open');document.body.classList.remove('no-scroll');}};

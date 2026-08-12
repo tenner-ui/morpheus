@@ -267,7 +267,7 @@ async function clinAI(system,user,max){
 }
 function baixarDoc(nome,htmlBody){ const html='<html xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"></head><body style="font-family:Arial;font-size:12pt;color:#111">'+htmlBody+'</body></html>';
   const blob=new Blob(['﻿',html],{type:'application/msword'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nome+'.doc'; a.click(); URL.revokeObjectURL(a.href); }
-function saveDocPront(titulo,conteudo){ try{ const k='morpheus_docs'; const arr=JSON.parse(localStorage.getItem(k)||'[]'); arr.unshift({titulo,conteudo,em:new Date().toISOString()}); localStorage.setItem(k,JSON.stringify(arr.slice(0,200))); }catch(e){} }
+function saveDocPront(titulo,conteudo,tipo,origem){ try{ const k='morpheus_docs'; const arr=JSON.parse(localStorage.getItem(k)||'[]'); arr.unshift({titulo,conteudo,em:new Date().toISOString()}); localStorage.setItem(k,JSON.stringify(arr.slice(0,200))); }catch(e){} try{ if(window.MorpheusDB){ MorpheusDB.user().then(function(u){ if(u) MorpheusDB.saveDoc({tipo:tipo||'nota',titulo:titulo,conteudo:conteudo,origem:origem||'prontuario'}).catch(function(){}); }); } }catch(e){} }
 
 /* ================= VIEWS ================= */
 const Views={
@@ -490,6 +490,19 @@ var clinOrb=ORBITA3D.init({ mount:'clinOrbit3', core:{label:'Núcleo Clínico'},
 document.getElementById('clinFab').onclick=function(){ clinOrb.open(); };
 $('#clinView').innerHTML='<div class="viewhead"><div class="ic">🩺</div><div><h1>Núcleo Clínico</h1><p>O prontuário desmontado em órbitas. Toque no 🪐 para navegar entre elas.</p></div></div><div class="card"><p class="muted" style="margin:0">Órbitas: Prontuário · Protocolo · Gravar por voz · Documentação · Labs e Docs · Alerta · Buscador de doenças · Triagem · Avaliação física · Exames · Nutrição. Todas compartilham a mesma IA (gateway ia-vivi) e anonimizam antes de processar.</p></div>';
 setTimeout(function(){ clinOrb.open(); }, 450);
+</script>
+<!-- ===== MorpheusDB — persistência de documentos anonimizados (nuvem, RLS dono-só). Sessão compartilhada por origem com o hub. ===== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+window.MorpheusDB=window.MorpheusDB||(function(){
+  var DEF_URL='https://anlbfamfgzcknngeosfh.supabase.co', DEF_KEY='sb_publishable_TwMC3LQ1RdTKUJovkHn2KQ_9vYh3ZnN', client=null;
+  function sb(){ if(client)return client; if(!window.supabase||!window.supabase.createClient)return null; var V=window.MorpheusVault; var url=(V&&V.get&&V.get('supabase_vivitality','url'))||DEF_URL; var key=(V&&V.get&&V.get('supabase_vivitality','anon'))||DEF_KEY; try{ client=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true}}); }catch(e){ client=null; } return client; }
+  async function user(){ var c=sb(); if(!c)return null; try{ var r=await c.auth.getUser(); return (r.data&&r.data.user)||null; }catch(e){ return null; } }
+  return { ready(){return !!sb();}, client:sb, user:user,
+    async saveDoc(d){ var c=sb(); if(!c) throw new Error('offline'); var r=await c.from('morpheus_documentos').insert({tipo:d.tipo||null,titulo:d.titulo||null,conteudo:d.conteudo||'',origem:d.origem||null}).select().single(); if(r.error) throw r.error; return r.data; },
+    async listDocs(){ var c=sb(); if(!c) throw new Error('offline'); var r=await c.from('morpheus_documentos').select('*').order('em',{ascending:false}); if(r.error) throw r.error; return r.data||[]; }
+  };
+})();
 </script>
 </body>
 </html>

@@ -1463,28 +1463,32 @@ var hubOrb=(function(){
 
 /* ---- Julius: assistente integrado ao cérebro (usa a Central de Tokens + gateway ia-vivi) ---- */
 var Julius=(function(){
-  var hist=[], open=false, busy=false, voiceOn=false, recog=null;
+  var hist=[], open=false, busy=false, voiceOn=false, recog=null, loaded=false;
   function speak(t){ try{ if(!window.speechSynthesis)return; speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(String(t).slice(0,600)); u.lang='pt-BR'; u.rate=1.03; u.pitch=1; speechSynthesis.speak(u); }catch(e){} }
   function V(){ return window.MorpheusVault; }
   function sys(){ return 'Você é o Julius, o assistente do ecossistema MORPHEUS do Dr. Tenner Nunes (Instituto Vitality). O hub central é o cérebro e você é a sua voz. Ajude a navegar os módulos (Curador, Educador, Prontuário, Educação, HormoneLab, Protocolos), a pensar clinicamente (apoio à decisão, CFM 2.336/2023, sem promessa de resultado, sinalize off-label) e a organizar o trabalho. Português do Brasil, tom cordial, direto e competente. Não invente dados clínicos.'; }
-  async function ai(user){ var v=V();
+  function buildMsgs(user){ var m=[]; var h=hist.slice(-16); for(var i=0;i<h.length;i++){ m.push({role:'user',content:String(h[i][0]||'')}); m.push({role:'assistant',content:String(h[i][1]||'')}); } m.push({role:'user',content:user}); return m; }
+  async function ai(user){ var v=V(); var msgs=buildMsgs(user);
     var ep=(v&&v.get('ia_vivi','endpoint'))||'https://anlbfamfgzcknngeosfh.supabase.co/functions/v1/ia-vivi';
     var tok=(v&&v.get('ia_vivi','token'))||''; var model=(v&&v.get('anthropic','model'))||'claude-sonnet-4-5';
     if(ep){ var r=null; try{ var h={'content-type':'application/json'}; if(tok)h['x-ia-token']=tok;
-        r=await fetch(ep,{method:'POST',headers:h,body:JSON.stringify({projeto:'julius',system:sys(),user:user,max_tokens:1400,model:model})}); }catch(e){ r=null; }
+        r=await fetch(ep,{method:'POST',headers:h,body:JSON.stringify({projeto:'julius',system:sys(),messages:msgs,max_tokens:1400,model:model})}); }catch(e){ r=null; }
       if(r&&r.ok){ var d=await r.json(); return d.text||(d.content&&d.content.map(function(c){return c.text||'';}).join(''))||''; }
       if(r&&r.status!==404){ var d2=await r.json().catch(function(){return {};}); if(!(v&&v.get('anthropic','key'))) throw new Error((d2.error&&(d2.error.message||d2.error))||('Gateway '+r.status)); } }
     var key=v&&v.get('anthropic','key');
-    if(key){ var r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:model,max_tokens:1400,system:sys(),messages:[{role:'user',content:user}]})});
+    if(key){ var r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:model,max_tokens:1400,system:sys(),messages:msgs})});
       var d3=await r2.json(); if(!r2.ok)throw new Error((d3.error&&d3.error.message)||('HTTP '+r2.status)); return (d3.content||[]).map(function(c){return c.text||'';}).join(''); }
     throw new Error('__NO_API__');
   }
   function push(cls,txt){ var el=document.getElementById('jlsMsgs'); var d=document.createElement('div'); d.className='jls-m '+cls; d.textContent=txt; el.appendChild(d); el.scrollTop=el.scrollHeight; return d; }
   return {
     toggle:function(v){ open=(v===undefined)?!open:v; document.getElementById('jlsPanel').classList.toggle('on',open);
-      if(open&&!hist.length){ push('a','Sou o Julius, a voz do cérebro. Posso te ajudar a navegar os módulos, pensar um caso ou organizar o trabalho. Em breve controlo também seus equipamentos. Como posso ajudar?'); document.getElementById('jlsInput').focus(); } },
+      if(open&&!loaded){ loaded=true;
+        var done=function(){ if(!hist.length){ push('a','Sou o Julius, a voz do cérebro. Posso te ajudar a navegar os módulos, pensar um caso ou organizar o trabalho. Em breve controlo também seus equipamentos. Como posso ajudar?'); } var el=document.getElementById('jlsInput'); if(el)el.focus(); };
+        try{ if(window.MorpheusDB){ MorpheusDB.juliusGet('conversa').then(function(mem){ if(mem&&mem.length){ hist=mem; var last=hist.slice(-6); for(var i=0;i<last.length;i++){ push('u',String(last[i][0]||'')); push('a',String(last[i][1]||'')); } push('sys','↑ memória restaurada da nuvem'); } done(); }).catch(done); } else { done(); } }catch(e){ done(); }
+      } else if(open){ var el2=document.getElementById('jlsInput'); if(el2)el2.focus(); } },
     async send(){ if(busy)return; var inp=document.getElementById('jlsInput'); var q=inp.value.trim(); if(!q)return; inp.value=''; push('u',q); busy=true;
-      var t=push('a','…'); try{ var a=await ai(q); t.textContent=a; hist.push([q,a]); if(voiceOn) speak(a); }
+      var t=push('a','…'); try{ var a=await ai(q); t.textContent=a; hist.push([q,a]); if(voiceOn) speak(a); try{ if(window.MorpheusDB){ MorpheusDB.user().then(function(u){ if(u) MorpheusDB.juliusSet('conversa',hist.slice(-40)).catch(function(){}); }); } }catch(e){} }
       catch(e){ t.textContent=(e.message==='__NO_API__')?'Ainda não estou conectado à IA. Cadastre a chave/gateway na Central de APIs & Tokens (escudo no topo) e eu ganho voz.':'Falha: '+e.message; } busy=false; },
     voice(){ voiceOn=!voiceOn; var b=document.getElementById('jlsSpk'); if(b)b.textContent=voiceOn?'🔊':'🔈'; if(!voiceOn&&window.speechSynthesis)speechSynthesis.cancel(); },
     mic(){ var SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){ push('sys','Reconhecimento de voz não suportado neste navegador.'); return; }

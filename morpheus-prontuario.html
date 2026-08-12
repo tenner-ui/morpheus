@@ -271,6 +271,9 @@ function saveDocPront(titulo,conteudo,tipo,origem){ try{ const k='morpheus_docs'
 
 /* ================= VIEWS ================= */
 const Views={
+  docsnuvem(){ return `<div class="viewhead"><div class="ic">☁️</div><div><h1>Documentos na nuvem</h1><p>Registros <b>anonimizados</b> salvos no seu Supabase (RLS — só você vê): notas por voz, triagens, avaliações físicas e avaliações de Labs.</p></div></div>
+    <div class="card"><div class="row"><button class="btn btn-gold" onclick="Cloud.load()">↻ Atualizar</button><span class="muted">Entre na sua conta (no hub) para sincronizar.</span></div><div id="cl_out" style="margin-top:12px"><p class="muted">Carregando…</p></div></div>
+    <p class="disc">Somente conteúdo anonimizado é armazenado aqui. Termos identificáveis (TCLE etc.) ficam no download local.</p>`; },
   gravar(){ return `
     <div class="viewhead"><div class="ic">🎙️</div><div><h1>Gravar por voz</h1><p>Grava a consulta, transcreve e <b>anonimiza automaticamente</b> ao encerrar — pronto para virar documento do prontuário e processar em servidores próximos.</p></div></div>
     <div class="card">
@@ -439,9 +442,9 @@ function docTpl(id,c){ const H='<h2 style="font-family:Georgia">Instituto Vitali
   };
   return H+(M[id]||'')+foot; }
 const Docs={
-  gerarUm(id){ const c=docCtx(); const d=DOCS.find(x=>x.id===id); baixarDoc((d?d.nome:id).replace(/[^\w\-À-ÿ ]+/g,'').slice(0,40),docTpl(id,c)); toast('Documento gerado.'); },
+  gerarUm(id){ const c=docCtx(); const d=DOCS.find(x=>x.id===id); baixarDoc((d?d.nome:id).replace(/[^\w\-À-ÿ ]+/g,'').slice(0,40),docTpl(id,c)); try{ saveDocPront((d?d.nome:id)+' — '+hoje(),'(termo gerado e baixado localmente; conteúdo identificável não é armazenado na nuvem)','termo','documentacao'); }catch(e){} toast('Documento gerado.'); },
   gerarSelecionados(){ const c=docCtx(); const ids=[].slice.call(document.querySelectorAll('.dcheck:checked')).map(e=>e.value); if(!ids.length){toast('Selecione ao menos um.');return;}
-    ids.forEach((id,i)=>{ const d=DOCS.find(x=>x.id===id); setTimeout(()=>baixarDoc((d?d.nome:id).replace(/[^\w\-À-ÿ ]+/g,'').slice(0,40),docTpl(id,c)),i*350); }); toast(ids.length+' documento(s) gerado(s).'); }
+    ids.forEach((id,i)=>{ const d=DOCS.find(x=>x.id===id); setTimeout(()=>baixarDoc((d?d.nome:id).replace(/[^\w\-À-ÿ ]+/g,'').slice(0,40),docTpl(id,c)),i*350); try{ saveDocPront((d?d.nome:id)+' — '+hoje(),'(termo gerado e baixado localmente; conteúdo identificável não é armazenado na nuvem)','termo','documentacao'); }catch(e){} }); toast(ids.length+' documento(s) gerado(s).'); }
 };
 
 /* ---- Labs e Docs ---- */
@@ -456,8 +459,21 @@ const Labs={ files:[], texts:'',
     const anon=anonimizar(material,nome);
     out.innerHTML='<div class="out" style="margin-bottom:8px"><b>Enviado (anonimizado):</b>\n'+esc(anon.slice(0,600))+(anon.length>600?'…':'')+'</div><p class="muted">Avaliando o caso…</p>';
     try{ const t=await clinAI('Você é assistente clínico do Dr. Tenner (Instituto Vitality). Recebe material ANONIMIZADO (exames/formulários). Faça uma avaliação estruturada: (1) achados relevantes, (2) hipóteses, (3) o que investigar, (4) sugestão de conduta integrando injetável + oral quando fizer sentido. Não reidentifique. CFM 2.336/2023, sem promessa de resultado.', anon, 2600);
-      out.innerHTML='<div class="out">'+esc(t)+'</div>'; }
+      out.innerHTML='<div class="out">'+esc(t)+'</div>'; try{ saveDocPront('Avaliação Labs — '+hoje(), anon+'\n\n=== AVALIAÇÃO IA (anonimizada) ===\n'+t, 'avaliacao_labs','labs'); }catch(e){} }
     catch(e){ out.innerHTML=(e.message==='__NO_API__')?'<p class="disc">IA não conectada. Cadastre a chave/gateway na Central de Tokens do hub.</p>':'<p class="disc">Falha: '+esc(e.message)+'</p>'; } }
+};
+
+/* ---- Documentos na nuvem ---- */
+const Cloud={
+  async load(){ const el=$('#cl_out'); if(!el)return; el.innerHTML='<p class="muted">Carregando…</p>';
+    if(!window.MorpheusDB){ el.innerHTML='<p class="disc">Nuvem indisponível.</p>'; return; }
+    let u=null; try{ u=await MorpheusDB.user(); }catch(e){}
+    if(!u){ el.innerHTML='<p class="disc">Você não está conectado. Entre na sua conta no hub para ver os documentos da nuvem.</p>'; return; }
+    try{ const rows=await MorpheusDB.listDocs();
+      if(!rows.length){ el.innerHTML='<p class="muted">Nenhum documento na nuvem ainda. Gere uma nota por voz, triagem, avaliação física ou avaliação de Labs.</p>'; return; }
+      el.innerHTML='<div class="doc-list">'+rows.map(function(r){ var dt=r.em?new Date(r.em).toLocaleString('pt-BR'):''; var body=esc(r.conteudo||''); return '<div class="doc-item" style="flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+esc(r.titulo||'(sem título)')+'</b><small class="muted">'+esc(r.tipo||'')+' · '+dt+'</small></div><details style="margin-top:6px"><summary class="muted" style="cursor:pointer">ver conteúdo</summary><div class="out" style="white-space:pre-wrap;margin-top:6px">'+body+'</div></details></div>'; }).join('')+'</div>';
+    }catch(e){ el.innerHTML='<p class="disc">Falha ao carregar: '+esc(e.message||String(e))+'</p>'; }
+  }
 };
 
 /* ---- Alerta ---- */
@@ -471,7 +487,7 @@ const Alerta={ async checar(){ const out=$('#al_out'); const meds=($('#al_meds')
 const EXTERNAL={ prontuario:'./morpheus-prontuario-clinico.html', protocolo:'./morpheus-protocolos.html' };
 function clinOpen(id){ if(EXTERNAL[id]){ location.href=EXTERNAL[id]; return; }
   const fn=Views[id]; $('#clinView').innerHTML = fn?fn():Views.scaffold(id,'🛰️',id,'Em construção.','');
-  if(id==='labs') Labs.render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  if(id==='labs') Labs.render(); if(id==='docsnuvem') Cloud.load(); window.scrollTo({top:0,behavior:'smooth'}); }
 const MOONS=[
   {id:'prontuario',label:'Prontuário',emoji:'📋'},
   {id:'protocolo',label:'Protocolo',emoji:'📄'},
@@ -484,11 +500,12 @@ const MOONS=[
   {id:'avaliacao',label:'Avaliação física',emoji:'📐'},
   {id:'exames',label:'Exames',emoji:'🧪'},
   {id:'nutricao',label:'Nutrição',emoji:'🥗'},
+  {id:'docsnuvem',label:'Docs na nuvem',emoji:'☁️'},
 ];
-var CLINCOL={prontuario:'#E6CD8C',protocolo:'#C8A24A',gravar:'#D98A7A',documentacao:'#5C93D6',labs:'#5FBF8F',alerta:'#20242e',buscador:'#2B5AA0',triagem:'#9b6bff',avaliacao:'#2EE6C8',exames:'#D9B45A',nutricao:'#7bbf5f'};
+var CLINCOL={prontuario:'#E6CD8C',protocolo:'#C8A24A',gravar:'#D98A7A',documentacao:'#5C93D6',labs:'#5FBF8F',alerta:'#20242e',buscador:'#2B5AA0',triagem:'#9b6bff',avaliacao:'#2EE6C8',exames:'#D9B45A',nutricao:'#7bbf5f',docsnuvem:'#8FB8E0'};
 var clinOrb=ORBITA3D.init({ mount:'clinOrbit3', core:{label:'Núcleo Clínico'}, moons:MOONS.map(function(m){return {id:m.id,label:m.label,emoji:m.emoji,color:CLINCOL[m.id]||'#C8A24A'};}), onSelect:clinOpen });
 document.getElementById('clinFab').onclick=function(){ clinOrb.open(); };
-$('#clinView').innerHTML='<div class="viewhead"><div class="ic">🩺</div><div><h1>Núcleo Clínico</h1><p>O prontuário desmontado em órbitas. Toque no 🪐 para navegar entre elas.</p></div></div><div class="card"><p class="muted" style="margin:0">Órbitas: Prontuário · Protocolo · Gravar por voz · Documentação · Labs e Docs · Alerta · Buscador de doenças · Triagem · Avaliação física · Exames · Nutrição. Todas compartilham a mesma IA (gateway ia-vivi) e anonimizam antes de processar.</p></div>';
+$('#clinView').innerHTML='<div class="viewhead"><div class="ic">🩺</div><div><h1>Núcleo Clínico</h1><p>O prontuário desmontado em órbitas. Toque no 🪐 para navegar entre elas.</p></div></div><div class="card"><p class="muted" style="margin:0">Órbitas: Prontuário · Protocolo · Gravar por voz · Documentação · Labs e Docs · Alerta · Buscador de doenças · Triagem · Avaliação física · Exames · Nutrição · Docs na nuvem. Todas compartilham a mesma IA (gateway ia-vivi) e anonimizam antes de processar.</p></div>';
 setTimeout(function(){ clinOrb.open(); }, 450);
 </script>
 <!-- ===== MorpheusDB — persistência de documentos anonimizados (nuvem, RLS dono-só). Sessão compartilhada por origem com o hub. ===== -->
